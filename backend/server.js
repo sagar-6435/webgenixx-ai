@@ -743,11 +743,7 @@ app.post('/api/calls/trigger', authenticateToken, async (req, res) => {
     const call = await client.calls.create({
       url: twimlUrl,
       to: lead.phone,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      record: true,
-      recordingStatusCallback: `${process.env.BASE_URL}/api/calls/recording/${resolvedId}`,
-      recordingStatusCallbackMethod: 'POST',
-      recordingStatusCallbackEvent: ['completed']
+      from: process.env.TWILIO_PHONE_NUMBER
     });
 
     if (isMongoConnected) {
@@ -822,11 +818,19 @@ app.post('/api/calls/twiml/:leadId', async (req, res) => {
   const voice = 'Polly.Kajal';
   const twilioLang = 'te-IN';
 
-  // Speak the personalized sales pitch
-  response.say({ voice, language: twilioLang }, lead.pitch);
+  // Wrap everything in a Gather to silently absorb any key presses
+  const gather = response.gather({
+    numDigits: 1,
+    action: `${process.env.BASE_URL}/api/calls/keypress/${lead._id || lead.id}`,
+    method: 'POST',
+    timeout: 30,
+  });
 
-  // Telugu closing message
-  response.say({ voice, language: twilioLang },
+  // Speak the personalized sales pitch inside gather
+  gather.say({ voice, language: twilioLang }, lead.pitch);
+
+  // Telugu closing message inside gather
+  gather.say({ voice, language: twilioLang },
     'మీ వ్యాపారానికి వెబ్సైట్ డిజైన్ చేయడానికి మా టీమ్ త్వరలో మీకు కాంటాక్ట్ చేస్తుంది. మీకు ధన్యవాదాలు!'
   );
 
@@ -849,6 +853,21 @@ app.post('/api/calls/twiml/:leadId', async (req, res) => {
 
   response.hangup();
 
+  res.type('text/xml');
+  res.send(response.toString());
+});
+
+// Keypress handler — absorbs any key the user presses, just hangs up gracefully
+app.post('/api/calls/keypress/:leadId', async (req, res) => {
+  const { leadId } = req.params;
+  const digit = req.body.Digits;
+  console.log(`[KEYPRESS] Lead ${leadId} pressed: ${digit}`);
+
+  const response = new twilio.twiml.VoiceResponse();
+  response.say({ voice: 'Polly.Kajal', language: 'te-IN' },
+    'మీకు ధన్యవాదాలు! మా టీమ్ త్వరలో మీకు కాంటాక్ట్ చేస్తుంది.'
+  );
+  response.hangup();
   res.type('text/xml');
   res.send(response.toString());
 });
