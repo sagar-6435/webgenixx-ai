@@ -49,7 +49,7 @@ class SettingsState {
 class SettingsNotifier extends StateNotifier<SettingsState> {
   SettingsNotifier()
       : super(SettingsState(
-          backendUrl: 'http://10.45.146.96:5005',
+          backendUrl: 'https://webgenixx-ai.onrender.com',
           twilioAccountSid: '',
           twilioAuthToken: '',
           twilioPhoneNumber: '',
@@ -65,8 +65,8 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // Always use the hardcoded IP — never load stale cached URL
-    const backend = 'http://10.45.146.96:5005';
+    // Always use Render deployed backend URL
+    const backend = 'https://webgenixx-ai.onrender.com';
     await prefs.setString('backend_url', backend);
 
     final sid = prefs.getString('twilio_account_sid') ?? '';

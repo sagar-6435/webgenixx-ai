@@ -4,14 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/lead_model.dart';
 
 class ApiService {
-  static String _baseUrl = 'http://10.45.146.96:5005'; // PC local IP for physical device
+  static String _baseUrl = 'https://webgenixx-ai.onrender.com';
   static String? _token;
 
-  static const String _defaultUrl = 'http://10.45.146.96:5005';
+  static const String _defaultUrl = 'https://webgenixx-ai.onrender.com';
 
   static Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
-    // Always reset to current default IP — clears any stale cached URL
     await prefs.setString('backend_url', _defaultUrl);
     _baseUrl = _defaultUrl;
     _token = prefs.getString('auth_token');
