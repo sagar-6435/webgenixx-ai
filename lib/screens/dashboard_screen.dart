@@ -13,6 +13,7 @@ import 'lead_management_screen.dart';
 import 'analytics_screen.dart';
 import 'settings_screen.dart';
 import 'auth_screen.dart';
+import 'recordings_screen.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -397,6 +398,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (context) => const AnalyticsScreen()),
+                          );
+                        },
+                      ),
+                      _buildNavigationButton(
+                        label: 'Recordings',
+                        desc: 'Voice Call Archive',
+                        icon: Icons.mic_rounded,
+                        gradient: const LinearGradient(colors: [Color(0xFF0EA5E9), Color(0xFF6366F1)]),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => const RecordingsScreen()),
                           );
                         },
                       ),

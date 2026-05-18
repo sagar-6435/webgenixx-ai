@@ -6,10 +6,11 @@ class Lead {
   final String phone;
   final String businessType;
   final String city;
-  final String status; // Pending, Calling..., In Conversation, Interested, Callback Later, Rejected
+  final String status;
   final String pitch;
   final DateTime? lastCalled;
   final String notes;
+  final String recordingUrl;
 
   Lead({
     required this.id,
@@ -21,6 +22,7 @@ class Lead {
     this.pitch = '',
     this.lastCalled,
     this.notes = '',
+    this.recordingUrl = '',
   });
 
   Lead copyWith({
@@ -33,6 +35,7 @@ class Lead {
     String? pitch,
     DateTime? lastCalled,
     String? notes,
+    String? recordingUrl,
   }) {
     return Lead(
       id: id ?? this.id,
@@ -44,6 +47,7 @@ class Lead {
       pitch: pitch ?? this.pitch,
       lastCalled: lastCalled ?? this.lastCalled,
       notes: notes ?? this.notes,
+      recordingUrl: recordingUrl ?? this.recordingUrl,
     );
   }
 
@@ -58,6 +62,7 @@ class Lead {
       'pitch': pitch,
       'lastCalled': lastCalled?.toIso8601String(),
       'notes': notes,
+      'recordingUrl': recordingUrl,
     };
   }
 
@@ -72,6 +77,7 @@ class Lead {
       pitch: map['pitch'] ?? '',
       lastCalled: map['lastCalled'] != null ? DateTime.tryParse(map['lastCalled']) : null,
       notes: map['notes'] ?? '',
+      recordingUrl: map['recordingUrl'] ?? '',
     );
   }
 
@@ -81,6 +87,6 @@ class Lead {
 
   @override
   String toString() {
-    return 'Lead(id: $id, name: $name, phone: $phone, businessType: $businessType, city: $city, status: $status)';
+    return 'Lead(id: $id, name: $name, phone: $phone, status: $status)';
   }
 }

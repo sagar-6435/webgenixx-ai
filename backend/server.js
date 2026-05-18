@@ -377,7 +377,8 @@ app.get('/api/leads', authenticateToken, async (req, res) => {
         status: l.status,
         pitch: l.pitch,
         lastCalled: l.lastCalled,
-        notes: l.notes
+        notes: l.notes,
+        recordingUrl: l.recordingUrl || ''
       }));
       res.json(mapped);
     } catch (e) {
